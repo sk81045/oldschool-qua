@@ -1,14 +1,14 @@
 <template>
   <div class="vue-uploader">
     <div class="file-list">
-      <section v-for="(file, index) of files"  :key="file.id"  class="file-item draggable-item">
-        <img :src="file.src" alt="" ondragstart="return false;">
+      <section v-for="(file, index) of files" :key="file.id" class="file-item draggable-item">
+        <!-- <img :src="file.src" alt="" ondragstart="return false;"> -->
         <!-- <p class="file-name">{{file.name}}</p> -->
         <span class="file-remove" @click="remove(index)">+</span>
       </section>
       <section v-if="status == 'ready'" class="file-item">
-        <div @click="add" class="add">
-          <span>+</span>
+        <div  class="add">
+         <button  @click="add">选择</button>
         </div>
       </section>
     </div>
@@ -22,11 +22,14 @@
         <button v-if="status == 'finished'" @click="finished">完成</button>
       </div>
     </section>
-    <input type="file" accept="image/*" @change="fileChanged" ref="file" multiple="multiple">
+    <input type="file" accept="xls/*" @change="fileChanged" ref="file" multiple="multiple">
   </div>
 </template>
 <script>
+  // import { Upload } from '@/api/affairs/Circle'
+  import { Upload } from '@/api/teacher/Effort'
   export default {
+    name: 'UploaderImg',
     props: {
       src: {
         type: String,
@@ -46,7 +49,7 @@
       add() {
         this.$refs.file.click() //调用file的click事件  用ref绑定之后，不需要在获取dom节点了，直接使用$refs调用就行。
       },
-      submit() {
+      submit(pid) {
         if (this.files.length === 0) {
           console.warn('no file!');
           return
@@ -59,14 +62,18 @@
 
         //当点击上传按钮时，将会遍历所有选中的文件，并添加到自定义的FormData中
         const formData = new FormData()
+        formData.append('pid', pid)
         this.files.forEach((item) => {
           formData.append(item.name, item.file)
         })
+        this.Uploader(formData)
+        return false
+
         const xhr = new XMLHttpRequest()
         xhr.upload.addEventListener('progress', this.uploadProgress, false)
         xhr.open('POST', this.src, true)
         this.uploading = true
-        console.log("formData",formData)
+
         xhr.send(formData)
         xhr.onload = () => {
           this.uploading = false
@@ -78,6 +85,16 @@
           }
         }
       },
+
+    Uploader(data){
+       console.log('formData!',data)
+      Upload(data).then(res => {
+          this.files = []
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+
       finished() {
         this.files = []
         this.status = 'ready'
@@ -86,8 +103,8 @@
         this.files.splice(index, 1) //从哪个位置删除1个元素
       },
       fileChanged() {
+        console.log("fileChanged")
         const list = this.$refs.file.files
-           console.log("fileChanged",this.files)
         for (let i = 0; i < list.length; i++) {
           if (!this.isContain(list[i])) {
             const item = {
@@ -100,6 +117,7 @@
           }
         }
         this.$refs.file.value = ''
+        this.submit(1045)
       },
       // 将图片文件转成BASE64格式
       html5Reader(file, item) {
@@ -126,7 +144,7 @@
 </script>
 <style>
   .vue-uploader {
-    border: 1px solid #e5e5e5;
+    /*border: 1px solid #e5e5e5;*/
   }
 
   .vue-uploader .file-list {
@@ -186,7 +204,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
-
+/*
   .vue-uploader .add {
     width: 80px;
     height: 80px;
@@ -197,7 +215,7 @@
     border: 1px dashed #ececec;
     font-size: 30px;
     cursor: pointer;
-  }
+  }*/
 
   .vue-uploader .upload-func {
     display: flex;

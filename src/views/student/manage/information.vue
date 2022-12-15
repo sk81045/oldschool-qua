@@ -70,7 +70,7 @@
         <q-item-section avatar>
         <q-item-section>年级</q-item-section>
         </q-item-section>
-        <q-item-section>{{info.classs.grades.grade}}</q-item-section>
+        <!-- <q-item-section>{{info.classs.grades.grade}}</q-item-section> -->
       </q-item>
     <q-separator /> 
     <q-item clickable v-ripple class="text-h6">

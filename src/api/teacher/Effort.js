@@ -28,3 +28,12 @@ export function Add (data) {
     data
   })
 }
+
+export function Upload (data) {
+  return _axios({
+    url: Prefix+'/uploader',
+    method: 'post',
+    responseType: 'text',
+    data
+  })
+}
