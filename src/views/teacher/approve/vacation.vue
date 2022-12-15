@@ -73,18 +73,15 @@
               name="keyboard_arrow_right"
               size="24px"
               class="q-ml-xs"
-              style="margin-top: -24px;left: 0px;color: #355B75;"
+              style="margin-top: -24px;left: 0px;color: #00b4ff;"
             />
           </q-item-section>
         </q-item>
     <div class="space" style="height:10px;"></div>
     </div>
   </div>
-    <div class="line" style="height:20px; color: #bdbdbd;">
-      <q-separator inset style="margin: 0px 0px -8px 20px;width: 30%;height: 0.03rem; background: #bdbdbd;"/>
-            <q-item-label style="margin-left: 10rem;">没有更多了</q-item-label>
-      <q-separator inset style="margin: -7px 0px 0px 246px;width: 32%;height: 0.03rem; background: #bdbdbd;"/>
-    </div>
+  <img src="@/assets/img/nodata.svg" style="width: 50%;margin: auto;" v-show="nodata"/>
+  <img src="@/assets/img/nomore.svg" style="width:100%" />
     </q-card>
 </div>
 </div>
@@ -126,6 +123,7 @@ export default {
         student:{},
       },
       list:[],
+      nodata:false
     }
   },
   created(){
@@ -135,6 +133,12 @@ export default {
     fetch() {
       StudentApproveList({query:this.query}).then(res => {
         this.list = res.data.response
+        if(!this.list.length){
+          this.nodata = true
+        }else{
+          this.nodata = false
+        }
+        
       }).catch(error => {
         console.log(error)
       })

@@ -3,23 +3,15 @@
     <div class="q-pa-md">
     <div class="row">
     <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
-        <img :src="require('@/assets/img/tree.svg')" style="width:100%" />
+        <img :src="require('@/assets/img/start.svg')" style="width:100%" />
      </div>
     <q-card class="my-card"  style="
     width: 100%;
     height: 500px; 
-    margin-top: -10rem;
+    margin-top: -15rem;
     color: #355B75;
     border-radius: 10px;
     box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
-      <q-card-section>
-        <q-btn-group outline>
-          <q-btn outline color="primary" label="编辑信息" icon="edit" :disable="loading" @click="edit()"/>
-          <q-btn outline color="primary" label="更新照片" icon="camera" :disable="loading" @click="$router.push('/photo/add?name='+info.name+'&uid='+info.id)"/>
-          <q-btn outline color="primary" label="添加荣誉" icon="edit" :disable="loading" @click="honor()"/>
-          <q-btn outline color="primary" label="删除此人" icon="priority_high" :disable="deleteby()"/>
-        </q-btn-group>
-      </q-card-section>
       <q-tabs
         v-model="tab"
         narrow-indicator
@@ -33,7 +25,7 @@
       <q-separator />
 
         <q-avatar size="100px" font-size="52px" style="
-        margin-top: 10px;
+        margin-top: 20px;
         margin-left: 9rem;
         border-radius: 10px;
         box-shadow: 0px 0px 0.1rem 0rem #355B75;">
@@ -43,7 +35,7 @@
         <div class="space" style="height:2px;"></div>
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="one">
-            <q-list bordered style="border: 0px">
+      <q-list bordered style="border: 0px">
       <q-item clickable v-ripple class="text-h6"> 
         <q-item-section avatar>
         <q-item-section>姓名</q-item-section>
@@ -94,92 +86,20 @@
       </q-item>
     <q-separator />  
     </q-list>
+
         </q-tab-panel>
         <q-tab-panel name="two">
     <q-card-section>
-        <div class="text-h6" style="margin-left: 8rem;height:10px;">荣誉信息</div>
+        <div class="text-h6" style="margin-left: 8rem;height:50px;">荣誉信息</div>
     </q-card-section>
-    <q-item clickable v-ripple style="
-        border-radius: 3px;
-        border: 0.01rem solid #355B75;
-        margin-left: 0.5rem;
-        width: 95%;
-        margin-top: 10px;
-        ">
-        <span>暂时无内容...</span>
-        </q-item>
+        <img src="@/assets/img/nodata.svg" style="width: 50%;margin-left: 6rem;" />
+        <!-- <img src="@/assets/img/nomore.svg" style="width:100%" /> -->
     <div class="space" style="height:100px;"></div>
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
 </div>
 </div>
-<!------------- dialog ---------------->
-  <q-dialog
-      v-model="dialog"
-      persistent
-      :maximized="maximizedToggle"
-      transition-show="slide-up"
-      transition-hide="slide-down"
-    >
-      <q-card class="text-white">
-        <q-bar style="color: #FFF;background-color: #355B75;">
-          <q-space />
-          <q-btn dense flat icon="close"  label="点击关闭" v-close-popup>
-            <q-tooltip content-class="bg-white text-primary"></q-tooltip>
-          </q-btn>
-        </q-bar>
-      <q-card class="my-card2" style="
-      margin-top: 10px;
-      width: 90%;
-      color: rgb(53, 91, 117);
-      border-radius: 10px;
-      border: 0.01rem solid #355B75;
-      margin-left: 20px;">
-    <div class="q-gutter-y-md column"  style="max-width: 270px;margin-left: 4rem;">
-      <q-card-section>
-        <div class="text-h6" style="color: #355B75;margin-left: 4rem;height:10px;">编辑学生信息</div>
-      </q-card-section>
-      <q-input bottom-slots v-model="form.name" label="学生姓名" counter :dense="dense" :rules="[ val => val && val.length > 0 || '姓名不能为空']">
-        <template v-slot:before>
-        <q-item-label style="color: #355B75; font-size: 1rem;margin-top: 1.3rem;width: 5rem;">学生姓名</q-item-label>
-        </template>
-        <template v-slot:hint>
-          必填
-        </template>
-      </q-input>
-      <q-input bottom-slots v-model="form.studentid" label="学生学号" disable type="number" counter maxlength="8" :rules="[ val => val && val.length > 0 || '教师编号不能为空']" :dense="dense">
-        <template v-slot:before>
-            <q-item-label style="color: #355B75; font-size: 1rem;margin-top: 1.3rem;width: 5rem;">学号</q-item-label>
-        </template>
-        <template v-slot:hint>
-          必填
-        </template>
-      </q-input>
-      <q-select v-model="form.grade" :options="gradeOptions" label="年级" @input="getClass()">
-        <template v-slot:before>
-            <q-item-label style="color: #355B75; font-size: 1rem;margin-top: 1.3rem;width: 5rem;">学生年级</q-item-label>
-        </template>
-        <template v-slot:hint>
-          必填
-        </template>
-      </q-select>
-     <q-select v-model="form.class" :options="classOptions" label="班级" >
-        <template v-slot:before>
-            <q-item-label style="color: #355B75; font-size: 1rem;margin-top: 1.3rem;width: 5rem;">学生班级</q-item-label>
-        </template>
-        <template v-slot:hint>
-          必填
-        </template>
-      </q-select>       
-      <div class="space" style="height:10px;"></div>
-      <q-btn outline color="primary" type="submit" label="提 交" @click="Update()" :loading="loading"/>
-    </div>
-          <div class="space" style="height:50px;"></div>
-      </q-card>
-      </q-card>
-    </q-dialog>
-<!------------- dialog ---------------->
  <div class="space" style="height:200px;"></div>
 </base-content>
 </template>
@@ -193,9 +113,9 @@ export default {
         return {
           dense:false,
           tab: 'one',
+          school:JSON.parse(sessionStorage.getItem('school_about')),
           loading:this.loading,
           notify:this.notify,
-          dialog: false,
           maximizedToggle: true,
           form:{
             uid:'',
@@ -208,7 +128,6 @@ export default {
               value:'',
             },
           },
-          school:this.SchoolAbout,
           info:{
             photo:''
           },
@@ -218,6 +137,13 @@ export default {
     },
     created() {
       this.form.uid = this.$route.query.uid
+      if(!this.$route.query.uid){
+          let user = JSON.parse(sessionStorage.getItem('user_role'))
+          this.form.uid = user.identity.id
+        }else{
+          this.form.uid = this.$route.query.uid  
+      }
+
       this.fetch()
       this.getGrade()
     },

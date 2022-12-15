@@ -1,11 +1,11 @@
 <template>
   <base-content>
- <div class="q-pa-md">
+ <div class="q-pa-md" style="background-color: #ffffff;">
       <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
-        <img :src="require('../../assets/img/start.svg')" style="width:100%" />
+        <img :src="require('../../assets/img/ba.png')" style="width:100%" />
     </div>
   <div class="row" v-show="isteacher">
-     <q-card class="cta-popular" style="z-index:999;margin-top: -15rem;width: 100%; box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
+     <q-card class="cta-popular" style="z-index:999;margin-top: -35rem;width: 100%; box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
     <div class="q-gutter-y-md column"  style="max-width: 270px;margin-left: 4rem;">
       <q-card-section>
         <div class="text-h6" style="margin-left: 5rem;height:10px;">教师注册</div>
@@ -48,12 +48,12 @@
           <div class="space" style="height:10px;"></div>
           <q-btn outline color="primary" type="submit" label="提 交" @click="Save()" :loading="loading"/>
     </div>
-    <div class="space" style="height:50px;"></div>
+    <div class="space" style="height:20px;"></div>
 </q-card>
   </div>
 
   <div class="row" v-show="noteacher">
-     <q-card class="cta-popular" style="z-index:999;margin-top: -15rem;width: 100%; box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
+     <q-card class="cta-popular" style="z-index:999;margin-top: -35rem;width: 100%; box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
     <div class="q-gutter-y-md column"  style="max-width: 270px;margin-left: 4rem;">
       <q-card-section>
         <div class="text-h6" style="margin-left: 5rem;height: 10px;">家长注册</div>
@@ -106,6 +106,9 @@
 <q-dialog v-model="confirm" persistent>
       <q-card style="font-size: 1.2rem;">
         <q-card-section class="row items-center">
+      <q-card-section>
+        <div class="text-h5" style="line-height: 15px;">{{school}}</div>
+      </q-card-section>   
       <q-card-section>
         <div class="text-h5" style="line-height: 15px;">选择一个身份完成注册</div>
       </q-card-section>
@@ -163,7 +166,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  <div class="lo" style="width: 100%;height: 320px; position:fixed;bottom:0;">
+  <div class="lo" style="width: 100%;height:  100%; position:fixed;bottom:0;">
   </div>
 </div>
   </base-content>
@@ -228,6 +231,12 @@ export default {
       Login(data).then(res => {
         console.log('开始登录',res)
         if (res.data.code == 200) {
+
+          if(!res.data.user.identity){
+              this.Notify('登录失败,没有获取您的身份信息,请联系客服','orange')
+              return false
+          }
+
           sessionStorage.setItem('access_token', res.data.token)
           sessionStorage.setItem('user_role',  JSON.stringify(res.data.user))
           sessionStorage.setItem('school_about',  JSON.stringify(res.data.school))
@@ -372,9 +381,9 @@ export default {
       }
     },
     School () {
-      getSchool().then(res => {
+      getSchool({id:this.$route.query.sid}).then(res => {
          console.log(res)
-         this.school = res.data.school.name
+         this.school = res.data.school
       }).catch(error => {
         console.log(error)
       })
@@ -388,9 +397,9 @@ export default {
 </script>
 
 <style scoped>
-  .lo{
-      background: url('../../assets/img/education.svg') center bottom / contain no-repeat;
-  }
+/*  .lo{
+      background: url('../../assets/img/ba.png') center bottom / contain no-repeat;
+  }*/
   .items-center img{
      width: 120%;
   }

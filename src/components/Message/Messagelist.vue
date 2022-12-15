@@ -12,7 +12,7 @@
       class="shadow-1 overflow-hidden"
       style="border-radius: 10px;    font-size: 1rem;"
       icon="email"
-      label="消息通知"
+      label="校园通知"
     >
  <div class="q-pa-md flex justify-center">
     <div style="max-width: 90%;"  v-for="(item,index) in message" :key="index">
@@ -23,7 +23,7 @@
         width: 110%;"
         @click="Details(index)">
           <q-item-section>
-            <q-item-label class="text-h6"> {{item.title}}</q-item-label>
+            <q-item-label class="text-h5" style="width: 13.5rem"> <span>{{item.title}}</span></q-item-label>
             <q-item-label caption lines="1">教务处</q-item-label>
             <div style='overflow:hidden;text-overflow: ellipsis; height: 2rem;width: 11rem;'>
             {{item.msg}}
@@ -37,13 +37,7 @@
     <div class="space" style="height:10px;"></div>
     </div>
   </div>
-      <div class="line" style="height:10px; color: #bdbdbd;">
-      </div>
-            <div class="line" style="height:20px; color: #bdbdbd;">
-      <q-separator inset style="margin: 0px 0px -8px 20px;width: 30%;height: 0.03rem; background: #bdbdbd;"/>
-            <q-item-label style="margin-left: 10rem;">没有更多了</q-item-label>
-      <q-separator inset style="margin: -7px 0px 0px 246px;width: 32%;height: 0.03rem; background: #bdbdbd;"/>
-    </div>
+      <img src="@/assets/img/nomore.svg" style="width:100%" />
     </q-expansion-item>
     </q-card>
 
@@ -82,6 +76,7 @@
       <q-card style="width: 100%;">
         <q-card-section>
           <div class="text-h6">{{this.details.title}}</div>
+          <div class="text-h7">教务处</div>
           <div class="text-h7">{{this.details.created_at}}</div>
         </q-card-section>
         <q-separator />

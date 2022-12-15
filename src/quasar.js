@@ -37,6 +37,7 @@ Vue.use(Quasar,{
       QAjaxBar,
       TouchPan,
       QMenu,
-      AppFullscreen
+      AppFullscreen,
+      Loading
     }
   })

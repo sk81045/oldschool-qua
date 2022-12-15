@@ -67,7 +67,7 @@
         </div>
         </q-card-section>
         <q-card-section class="text-h6">
-          错误: 没有获取到学生的班主任信息,无法完成请假审批
+          {{screenMsg}}
         </q-card-section>
         <q-card-actions align="right">
           <a href="/"><q-btn flat label="确定" color="primary" v-close-popup /></a>
@@ -90,6 +90,7 @@ export default {
       loading:false,
       hiddenDay:false,
       screen:false,
+      screenMsg:'',
       approver:"",
       form:{
         type:2,
@@ -133,10 +134,17 @@ export default {
     },
     getApprover(){
       getApprover().then(res => {
-        if (!res.data.response.classs.teacher) {
-          this.screen = true
-          return false
+        if (!res.data.response.classs) {  //部门为空
+            this.screenMsg = '没有获取到您所在的班级,无法完成请假审批'
+            this.screen = true
+            return false
         }
+        if(!res.data.response.classs.teacher){ //部门审批人为空
+            this.screenMsg = '您所在的班级没有设置审批人(班主任),无法完成请假审批'
+            this.screen = true
+            return false
+          }
+
         this.approver = res.data.response.classs.teacher.name
         this.form.approver = res.data.response.classs.teacher.id
       }).catch(error => {

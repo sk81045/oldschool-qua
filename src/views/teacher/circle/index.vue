@@ -48,7 +48,7 @@
                   <div class="space" style="height:20px;"></div>
                 <template v-slot:action>
                   <q-btn flat :label="'('+item.like+')赞'" :icon="item.icon" @click="like(index)" />
-                  <q-btn flat label="删除" @click="Delete(item.id)" />
+                  <q-btn flat label="删除" @click="Delete(item.id)" v-if="item.id != 1"/>
                 </template>
               </q-banner>
               <!-- <div class="space" style="height:10px;"></div> -->
@@ -85,7 +85,6 @@ export default {
   },
   created(){
     this.fetch()
-    console.log(" Vue.prototype.$baseURL", Vue.prototype.$baseURL)
   },
   methods:{
     fetch() {
@@ -126,7 +125,7 @@ export default {
       this.imgview = true
     },
     getImgUrl (img) {
-        return 'http://kick.yoozhi.cn/' + img  
+        return Vue.prototype.$rootURL + img  
     },
   }
 }

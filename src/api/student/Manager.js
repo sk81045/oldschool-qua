@@ -70,3 +70,12 @@ export function Delete (data) {
     data
   })
 }
+
+export function Evaluation (data) {
+  return _axios({
+    url: Prefix+'/evaluation/add',
+    method: 'post',
+    responseType: 'text',
+    data
+  })
+}

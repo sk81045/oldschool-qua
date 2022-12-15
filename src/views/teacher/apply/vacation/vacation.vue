@@ -72,11 +72,8 @@
     <div class="space" style="height:10px;"></div>
     </div>
   </div>
-    <div class="line" style="height:20px; color: #bdbdbd;">
-      <q-separator inset style="margin: 0px 0px -8px 20px;width: 30%;height: 0.03rem; background: #bdbdbd;"/>
-            <q-item-label style="margin-left: 10rem;">没有更多了</q-item-label>
-      <q-separator inset style="margin: -7px 0px 0px 246px;width: 32%;height: 0.03rem; background: #bdbdbd;"/>
-    </div>
+  <img src="@/assets/img/nodata.svg" style="width: 50%;margin: auto;" v-show="nodata"/>
+  <img src="@/assets/img/nomore.svg" style="width:100%" />
     </q-card>
 </div>
 </div>
@@ -87,9 +84,9 @@
         <q-card-section>
           <div class="text-h6">选择</div>
         </q-card-section>
-        <q-card-section class="row items-center">
-          <q-radio v-model="apply" val="vacation" label="请假申请" />
-          <q-radio v-model="apply" val="trip" label="出差申请" />
+        <q-card-section class="row items-center" >
+          <q-radio class="text-h6" v-model="apply" val="vacation" label="请假申请" />
+          <q-radio class="text-h6" v-model="apply" val="trip" label="出差申请" />
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="取消" color="primary" v-close-popup />
@@ -117,6 +114,7 @@ export default {
         proxyDate: '2022/01',
       },
       list:[],
+      nodata:false
     }
   },
   created(){
@@ -126,6 +124,11 @@ export default {
     fetch() {
       getList().then(res => {
         this.list = res.data.response
+        if(!this.list.length){
+          this.nodata = true
+        }else{
+          this.nodata = false
+        }
       }).catch(error => {
         console.log(error)
       })

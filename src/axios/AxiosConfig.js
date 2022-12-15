@@ -8,6 +8,7 @@ import qs from 'qs'
  */
  // Vue.prototype.$baseURL = process.env.NODE_ENV === 'production' ? '/api/' : 'http://1880orso.xb35/api/'
 Vue.prototype.$baseURL = process.env.NODE_ENV === 'production' ? '/api/' : 'http://kick.yoozhi.cn/api/'
+Vue.prototype.$rootURL = process.env.NODE_ENV === 'production' ? '/' : 'http://kick.yoozhi.cn/'
 
 const axios = Axios.create({
   baseURL: Vue.prototype.$baseURL, // 请求基地址

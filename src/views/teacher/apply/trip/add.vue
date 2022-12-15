@@ -117,7 +117,7 @@
       </q-card-section>
       <div class="q-gutter-sm" style="margin: -40px;
         margin-top: 10px;">
-      <span v-for="(item,index) in approverList" :key="index" style="margin: 0.2rem;font-size: 1rem;">
+      <span v-for="(item,index) in approverList" :key="index" style="margin: 0.2rem;font-size: 1.5rem;">
         <q-radio dense v-model="radio" :val="index" :label="item.name" />
       </span>
      </div>

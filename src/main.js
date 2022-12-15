@@ -29,7 +29,6 @@ Vue.use(jsonView)
 
 // 前往 public 文件夹的路径
 Vue.prototype.$PUBLIC_PATH = process.env.BASE_URL
-
 const loading = false
 Vue.prototype.Loadings = function (loading){
       this.loading = !this.loading
@@ -38,6 +37,15 @@ Vue.prototype.Loadings = function (loading){
         clearInterval(times)
       }, 2000); //1000毫秒后执行
 }
+
+Vue.prototype.showLoading = function (){
+      this.$q.loading.show()
+      this.timer = setTimeout(() => {
+        this.$q.loading.hide()
+        this.timer = void 0
+      }, 2000)
+}
+
 Vue.prototype.Notify = function (msg,color = 'green'){
         this.$q.notify({
           icon: 'insert_emoticon',
@@ -48,6 +56,15 @@ Vue.prototype.Notify = function (msg,color = 'green'){
         })
 }
 
+Vue.prototype.SchoolAbout = JSON.parse(sessionStorage.getItem('school_about'))
+Vue.prototype.UserAbout = JSON.parse(sessionStorage.getItem('user_role'))
+
+Vue.prototype.rootURL = function (){
+return Vue.prototype.$rootURL = process.env.NODE_ENV === 'production' ? '/' : 'http://kick.yoozhi.cn/'
+}
+Vue.prototype.rootApi = function (){
+return Vue.prototype.$baseURL = process.env.NODE_ENV === 'production' ? '/api/' : 'http://kick.yoozhi.cn/api/'
+}
 
 const vue = new Vue({
   router,

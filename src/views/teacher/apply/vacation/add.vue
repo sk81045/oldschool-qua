@@ -79,8 +79,8 @@
         <q-icon name="report_problem"  style="font-size: 1.5rem;"/> 错误</q-toolbar-title>
         </div>
         </q-card-section>
-        <q-card-section class="text-h7">
-         没有获取到您的部门信息,无法完成请假审批
+        <q-card-section class="text-h6">
+         {{screenMsg}}
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="确定" color="primary" v-close-popup @click="$router.go(-1)"/>
@@ -113,15 +113,15 @@
       margin-left: 20px;">
     <div class="q-gutter-y-md column"  style="max-width: 270px;margin-left: 4rem;">
       <q-card-section>
-        <div class="text-h6" style="color: #355B75;margin-left: 4rem;height:10px;">{{title}}</div>
+        <div class="text-h5" style="color: #355B75;margin-left: 4rem;height:10px;">{{title}}</div>
       </q-card-section>
       <div class="q-gutter-sm" style="margin: -40px;
         margin-top: 10px;">
-      <span v-for="(item,index) in approverList" :key="index" style="margin: 0.2rem;font-size: 1rem;">
+      <span class="text-h5" v-for="(item,index) in approverList" :key="index" style="margin: 0.2rem;font-size: 1.5rem;">
         <q-radio dense v-model="radio" :val="index" :label="item.name" />
       </span>
      </div>
-      <div class="space" style="height:30px;"></div>
+      <div class="space" style="height:70px;"></div>
       <q-btn outline color="primary" type="submit" label="确 定" @click="chooseAv(false)" :loading="loading"/>
     </div>
       <div class="space" style="height:50px;"></div>
@@ -143,6 +143,7 @@ export default {
       loading:false,
       hiddenDay:false,
       screen:false,
+      screenMsg:'',
       selected:false,
       approver:"",
       copyer:"",
@@ -210,11 +211,17 @@ export default {
     },
     getApprover(){
       getApprover().then(res => {
-        if (!res.data.response.dept) {
-          console.log("没有审批人")
-          this.screen = true
-          return false
+        if (!res.data.response.dept) {  //部门为空
+            this.screenMsg = '没有获取到您所在的部门,无法完成请假审批'
+            this.screen = true
+            return false
         }
+        if(!res.data.response.dept.approvefirst){ //部门审批人为空
+            this.screenMsg = '您所在的部门没有设置审批人,无法完成请假审批'
+            this.screen = true
+            return false
+        }
+
         this.approver = res.data.response.dept.approver.name
         this.form.approver = res.data.response.dept.approver.id
         this.approverList = res.data.list

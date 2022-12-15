@@ -3,7 +3,7 @@
  <div class="q-pa-md">
     <div class="row">
       <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
-        <img :src="getImgUrl(school.headerpic)" style="width:100%" />
+        <img :src="getImgUrl(school.background)" style="width:100%" />
       </div>
     <q-card class="my-card" style="
     width: 100%; 

@@ -4,101 +4,123 @@
       <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
         <img src="@/assets/img/infomation.svg" style="width:100%" />
       </div>
-
     <div class="row items-start q-gutter-md">
       <q-card flat bordered class="col" style="
-      border: 0.01rem solid #355B75;
-      margin-top:2rem;
-      ">
-        <q-item>
+      border: 0.00rem solid #355B75;
+      margin-top:2rem;" v-show="teacherVierw">
+        <q-item class="text-h6">
           <q-item-section avatar>
             <q-avatar>
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+              <img src="@/assets/img/null头像.png">
             </q-avatar>
           </q-item-section>
-
           <q-item-section>
-            <q-item-label>黄学博</q-item-label>
-            <q-item-label caption>教师</q-item-label>
+            <q-item-label>{{teachers.name}}</q-item-label>
+            <q-item-label caption>{{identidyer}}</q-item-label>
           </q-item-section>
         </q-item>
         <q-separator />
         <q-responsive :ratio="1">
-          <q-card-section class="border-radius-inherit flex flex-center">
- <div style="width:100%;margin-top: -190px;">
-      <q-item clickable v-ripple style="
-      border-radius: 3px;
-      border: 0.01rem solid #355B75;
-      margin-left: 1rem;
-      width: 91.5%;
-      ">
-        <div class="text-h7" style="margin-left:0rem;margin-top: 0.3rem;">
-        <q-icon name="add" size="20px" class="q-ml-xs"/>
-        <span>学校</span> <span  style="margin-left:8rem;" >行唐一中</span>
-        <q-icon
-          name="keyboard_arrow_right"
-          size="24px"
-          class="q-ml-xs"
-          style="margin-top: 0px;left: 0px;color: #355B75;"
-          />
-      </div>  
+    <q-list bordered style="border: 0px">
+      <q-item clickable v-ripple class="text-h6"> 
+        <q-item-section avatar>
+        <q-item-section>学校</q-item-section>
+        </q-item-section>
+        <q-item-section>{{school.wxname}}</q-item-section>
       </q-item>
-    <div class="space" style="height:5px;"></div>
-    <q-item clickable v-ripple style="
-      border-radius: 3px;
-      border: 0.01rem solid #355B75;
-      margin-left: 1rem;
-      width: 91.5%;
-      ">
-        <div class="text-h7" style="margin-left:0rem;margin-top: 0.3rem;">
-        <q-icon name="add" size="20px" class="q-ml-xs"/>
-        <span>姓名</span> <span  style="margin-left:8rem;" >黄学博</span>
-        <q-icon
-          name="keyboard_arrow_right"
-          size="24px"
-          class="q-ml-xs"
-          style="margin-top: 0px;left: 0px;color: #355B75;width: 50px"
-          />
-      </div>  
+   <q-separator />
+      <q-item clickable v-ripple class="text-h6">
+        <q-item-section avatar>
+        <q-item-section>部门</q-item-section>
+        </q-item-section>
+        <q-item-section>{{teachers.dept.department}}</q-item-section>
       </q-item>
-    <div class="space" style="height:5px;"></div>
-
-      <q-item clickable v-ripple style="
-      border-radius: 3px;
-      border: 0.01rem solid #355B75;
-      margin-left: 1rem;
-      width: 91.5%;
-      ">
-        <div class="text-h7" style="margin-left:0rem;margin-top: 0.3rem;">
-        <q-icon name="add" size="20px" class="q-ml-xs"/>
-        <span>身份</span> <span  style="margin-left:8rem;width: 10px" >教师</span>
-        <q-icon
-          name="keyboard_arrow_right"
-          size="24px"
-          class="q-ml-xs"
-          style="margin-top: 0px;left: 0px;color: #355B75;width: 60px"
-          />
-      </div>  
-      </q-item>
-    </div> 
-          </q-card-section>
+      <q-separator />   
+      <q-separator />
+    </q-list>
         </q-responsive>
       </q-card>
+      <q-card flat bordered class="col" style="
+      border: 0.0rem solid #355B75;
+      margin-top:2rem;"  v-show="parentVierw">
+        <q-item class="text-h6">
+          <q-item-section avatar>
+            <q-avatar>
+              <img src="@/assets/img/null头像.png">
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{parents.name}}家长</q-item-label>
+           <q-item-label caption>{{identidyer}}</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator />
+        <q-responsive :ratio="1">
+    <q-list bordered style="border: 0px">
+      <q-item clickable v-ripple class="text-h6"> 
+        <q-item-section avatar>
+        <q-item-section>学校</q-item-section>
+        </q-item-section>
+        <q-item-section>{{school.wxname}}</q-item-section>
+      </q-item>
+   <q-separator />
+      <q-item clickable v-ripple class="text-h6">
+        <q-item-section avatar>
+        <q-item-section>年级</q-item-section>
+        </q-item-section>
+        <q-item-section>{{parents.classs.grades.grade}}</q-item-section>
+      </q-item>
+      <q-separator />   
+      <q-item clickable v-ripple class="text-h6">
+        <q-item-section avatar>
+        <q-item-section>班级</q-item-section>
+        </q-item-section>
+        <q-item-section>{{parents.classs.class}}</q-item-section>
+      </q-item>
+
+      <q-separator />
+    </q-list>
+        </q-responsive>
+      </q-card>
+
     </div>
   </div>
 </template>
-
 <script>
   export default {
     data() {
       return {
-        isShow: true, //通过 v-show 控制显示'获取按钮'还是'倒计时'
-        count: 0, //倒计时 计数器
-        msg: "", //如果msg为空是蓝色，点击之后变灰色
+        identidyer:'',
+        teachers:{
+          dept:{
+            department:''
+          }
+        },
+        parents:{
+          classs:{
+            class:'',
+            grades:{
+              grade:''
+            }
+          }
+        },
+        school: JSON.parse(sessionStorage.getItem('school_about')),
+        teacherVierw: false, 
+        parentVierw: false, 
       };
     },
     created(){
-      this.verification()
+      let users = JSON.parse(sessionStorage.getItem('user_role'))
+      if(users.identidyer == '教师'){
+        this.identidyer = '教师'
+        this.teachers = users.identity
+        this.teacherVierw = true
+      }
+      if(users.identidyer == '学生家长'){
+        this.identidyer = '学生家长'
+        this.parents = users.identity
+        this.parentVierw = true
+      }
     },
     methods: {
       verification() {

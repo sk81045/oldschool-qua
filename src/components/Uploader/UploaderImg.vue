@@ -102,7 +102,6 @@
       },
       fileChanged() {
         const list = this.$refs.file.files
-           console.log("fileChanged",this.files)
         for (let i = 0; i < list.length; i++) {
           if (!this.isContain(list[i])) {
             const item = {

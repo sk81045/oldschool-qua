@@ -34,7 +34,7 @@
         ">
           <q-item-section style="width: 4rem;">
             <q-avatar square v-if="item.photo">
-            <img :src="item.photo.base64">
+            <img :src="rootURL()+item.photo.path">
             </q-avatar>
             <q-avatar square v-else>
             <img src="@/assets/img/null头像.png">
@@ -46,7 +46,7 @@
               {{item.reason}}
             </div>
             <q-item-label class="text-h7" style="color: #355B75; width: 5rem;margin-top: 0.5rem;">性别 {{item.sex}}</q-item-label>
-            <q-item-label class="text-h7" lines="1" style="color: #355B75;">学号 {{item.studentid}}</q-item-label>
+            <q-item-label class="text-h7" lines="1" style="color: #355B75; width: 7rem;">学号 {{item.studentid}}</q-item-label>
           </q-item-section>
             <q-item-section side>
             <a @click="Details(item.id)"><q-item-label class="text-h6" style="color: #355B75;width: 3rem;
@@ -56,11 +56,8 @@
     <div class="space" style="height:10px;"></div>
     </div>
   </div>
-    <div class="line" style="height:20px; color: #bdbdbd;">
-      <q-separator inset style="margin: 0px 0px -8px 20px;width: 30%;height: 0.03rem; background: #bdbdbd;"/>
-            <q-item-label style="margin-left: 10rem;">没有更多了</q-item-label>
-      <q-separator inset style="margin: -7px 0px 0px 246px;width: 32%;height: 0.03rem; background: #bdbdbd;"/>
-    </div>
+  <!-- <img src="@/assets/img/nodata.svg" style="width: 50%;margin: auto;" v-show="nodata"/> -->
+  <img src="@/assets/img/nomore.svg" style="width:100%" />
     </q-card>
 </div>
 </div>

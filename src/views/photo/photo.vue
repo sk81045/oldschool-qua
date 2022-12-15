@@ -20,9 +20,10 @@
       ></q-img>
     <div class="content">
         <div class="face">
-            <input type="file" name="file" class="upload" @change="uploadImg" accept="image/*" capture="camera">
-            <span class="span-txt" style="">照片采集</span>
+        <input type="file" name="file" ref="file" class="upload" @change="uploadImg" accept="image/*">
+            <span class="span-txt" style="">选择照片</span>
         </div>
+
       <q-card-section>
       <q-btn  outline color="primary" type="submit" label="提 交" @click="Saveago()" style="width: 100%;margin: 30px 0px 0px 0px;"/>
     </q-card-section>
@@ -47,8 +48,9 @@
 </template>
 
 <script>
+import Vue from 'vue'     
 import BaseContent from '@/components/BaseContent/BaseContent'
-import { savePhoto } from '@/api/student/Manager'
+import { photoAdd,photo } from '@/api/affairs/Photo'
 export default {
     components: { BaseContent },
     data() {
@@ -57,17 +59,35 @@ export default {
           form:{
             name:'',
             uid:'',
-            imgUrl: 'https://cdn.quasar.dev/img/image-src.png'
+            imgUrl: 'http://kick.yoozhi.cn/uploads/app/uploadeimg.svg',
+            files:'',
           },
         }
     },
     created() {
-      this.form.name = this.$route.query.name
-      this.form.uid = this.$route.query.uid
+        if(!this.$route.query.name && !this.$route.query.uid){
+            let user = JSON.parse(sessionStorage.getItem('user_role'))
+            this.form.name = user.identity.name
+            this.form.uid = user.identity.id
+        }else{
+            this.form.name = this.$route.query.name
+            this.form.uid = this.$route.query.uid  
+        }
+        this.fetch()
     },
     methods: {
+        fetch() {
+            photo({pid:this.form.uid}).then(res => {
+                if (res.data.result) {
+                    this.form.imgUrl = Vue.prototype.$rootURL+res.data.result
+                }
+            }).catch(error => {
+                console.log(error)
+            })
+        }, 
       uploadImg(e) {
-            let file = e.target.files[0];
+            this.files = e.target.files[0]
+            let file = e.target.files[0]
             let url = "";
             let that = this;
             var reader = new FileReader();
@@ -81,10 +101,12 @@ export default {
         this.confirm = true
       },
       Save() {
-        savePhoto(this.form).then(res => {
+        const formData = new FormData()
+        formData.append('pid', this.form.uid)
+        formData.append( this.files.name,  this.files)
+        console.log("formData",formData)
+        photoAdd(formData).then(res => {
         if (res.data.code == 200) {
-          // this.$router.push('/student/manage')
-          this.$router.back(-1)
           this.$q.notify({
               icon: 'insert_emoticon',
               message: '操作成功',
@@ -93,10 +115,10 @@ export default {
               timeout: 1500
             })
         }
-      }).catch(error => {
-        console.log(error)
-      })
-      },
+        }).catch(error => {
+         console.log(error)
+        })
+    },
     //选择文件事件
    SelectImg(e) {
     console.log("e",e)
@@ -126,8 +148,6 @@ export default {
     },
 
       galleryImgs() {
-        alert(22
-          )
      plus.gallery.pick(function(e) {
       let name = e.substr(e.lastIndexOf('/') + 1);
       compressImage(e,name);

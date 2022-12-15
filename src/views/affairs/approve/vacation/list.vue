@@ -67,24 +67,21 @@
             <q-item-label class="text-h6" style="color: #00b4ff; width: 6rem" @click=detail(index)>
             处理中</q-item-label>
           </q-item-section>
-            <q-item-section side v-else>
+          <q-item-section side v-else>
             <q-item-label class="text-h6" style="color: #00b4ff; width: 6rem" @click=detail(index)>
             去处理</q-item-label>
             <q-icon
               name="keyboard_arrow_right"
               size="24px"
-              style="margin-top: -24px;left: 0px;color: #355B75;"
+              style="margin-top: -24px;left: 0px;color: #00b4ff;"
             />
           </q-item-section>
         </q-item>
     <div class="space" style="height:10px;"></div>
     </div>
   </div>
-    <div class="line" style="height:20px; color: #bdbdbd;">
-      <q-separator inset style="margin: 0px 0px -8px 20px;width: 30%;height: 0.03rem; background: #bdbdbd;"/>
-            <q-item-label style="margin-left: 10rem;">没有更多了</q-item-label>
-      <q-separator inset style="margin: -7px 0px 0px 246px;width: 32%;height: 0.03rem; background: #bdbdbd;"/>
-    </div>
+  <img src="@/assets/img/nodata.svg" style="width: 50%;margin: auto;" v-show="nodata"/>
+  <img src="@/assets/img/nomore.svg" style="width:100%" />
     </q-card>
 </div>
 </div>
@@ -96,9 +93,8 @@
         </q-card-section>
         <q-separator />
         <q-card-section style="max-height: 50vh" class="scroll">
-          <p style="font-size:1.2rem">{{this.details.describe}}。</p>
+          <p style="font-size:1.2rem">{{this.details.describe}}</p>
         </q-card-section>
-        <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="拒绝" color="primary" v-close-popup @click=approver(details.id,3) />
           <q-btn flat label="批准" color="primary" v-close-popup @click=approver(details.id,2) />
@@ -126,6 +122,7 @@ export default {
         teacher:{},
       },
       list:[],
+      nodata:false,
     }
   },
   created(){
@@ -135,6 +132,10 @@ export default {
     fetch() {
       getList({query:this.query}).then(res => {
         this.list = res.data.response
+        if(!res.data.response.length){
+          this.nodata = true
+          return false
+        }
       }).catch(error => {
         console.log(error)
       })

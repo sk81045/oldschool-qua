@@ -20,11 +20,12 @@ export function getUserRouter2 () {
   })
 }
 
-export function getSchool () {
+export function getSchool (params) {
   return _axios({
     url: 'outside/school',
-    method: 'post',
-    responseType: 'text'
+    method: 'get',
+    responseType: 'text',
+    params
   })
 }
 
