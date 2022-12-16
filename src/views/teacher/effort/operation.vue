@@ -8,8 +8,9 @@
     <q-scroll-area ref="scrollArea" style="height: calc(95vh - 124px);" :thumb-style="thumbStyleOfMenu">
           <q-card-section>
     <q-card-section>
+       <UploaderXls  ref="child"  @upload="upload"></UploaderXls>
         <q-btn-group outline>
-          <q-btn outline color="primary" label="上传成绩" icon="call_made" :disable="loading" />
+          <q-btn outline color="primary" label="上传成绩" icon="call_made" :disable="loading" @click="redayUpload()"/>
           <q-btn outline color="primary" label="下载模板" icon="arrow_downward" :disable="loading" @click="download()"/>
           <q-btn outline color="primary" label="删除" icon="priority_high"/>
         </q-btn-group>
@@ -47,9 +48,10 @@
 import Vue from 'vue'  
 import BaseContent from '@/components/BaseContent/BaseContent'
 import { thumbStyleOfMenu } from '@/components/BaseContent/ThumbStyle'
-import { List,Add } from '@/api/teacher/Effort'
+import UploaderXls from '@/components/Uploader/UploaderXls'
+import { List, Add, Upload } from '@/api/teacher/Effort'
 export default {
-  components: { BaseContent },
+  components: { BaseContent, UploaderXls },
   data () {
     return {
       thumbStyleOfMenu,
@@ -80,7 +82,18 @@ export default {
       }).catch(error => {
         console.log(error)
       })
-    }, 
+    },         
+    redayUpload() {
+      this.$refs.child.add()
+    },
+    upload(data){
+      Upload(data.data).then(res => {
+        
+
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     download() {
       window.location.href = this.rootApi()+"outside/effort/export?class="+this.class+'&name='+this.form.title
     },

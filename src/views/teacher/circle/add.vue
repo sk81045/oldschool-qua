@@ -25,22 +25,9 @@
         label="在此输入文字"
         hint="发布班级圈"
       style="width: 90%;margin-left: 1rem;"/>
-<!--       <div class="col-3" style="margin-left: 15px;">
-        <q-img
-          src="https://placeimg.com/500/300/nature"
-          :ratio="1"
-        />
-      </div>
-      <div class="col-3" style="margin-left: 15px;" @click="upimg()">
-        <q-img
-          :src="require('@/assets/img/上传图片.svg')"
-          :ratio="1"
-        />
-      </div> -->
-       <UploaderImg :src="'http://kick.yoozhi.cn/api/outside/img/uploader'" ref="child" ></UploaderImg>
+<!--        <UploaderImg :src="'http://kick.yoozhi.cn/api/outside/img/uploader'" ref="child" ></UploaderImg> -->
+      <UploaderImg  ref="child"></UploaderImg>
     </div>
-
-
             <div class="space" style="height:70px;"></div>
                <q-btn-group outline style="margin-left: 10rem;">
                 <q-btn outline color="primary" label="提交" icon="camera" @click="Save()"/>

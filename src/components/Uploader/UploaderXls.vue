@@ -1,45 +1,36 @@
 <template>
   <div class="vue-uploader">
-    <div class="file-list">
-      <section v-for="(file, index) of files" :key="file.id" class="file-item draggable-item">
-        <!-- <img :src="file.src" alt="" ondragstart="return false;"> -->
-        <!-- <p class="file-name">{{file.name}}</p> -->
-        <span class="file-remove" @click="remove(index)">+</span>
-      </section>
-      <section v-if="status == 'ready'" class="file-item">
-        <div  class="add">
-         <button  @click="add">选择</button>
-        </div>
-      </section>
-    </div>
-
-    <section v-if="files.length != 0" class="upload-func">
-      <div class="progress-bar">
-        <section v-if="uploading" :width="(percent * 100) + '%'">{{(percent * 100) + '%'}}</section>
-      </div>
-      <div class="operation-box">
-        <button v-if="status == 'ready'" @click="submit">上传</button>
-        <button v-if="status == 'finished'" @click="finished">完成</button>
-      </div>
-    </section>
     <input type="file" accept="xls/*" @change="fileChanged" ref="file" multiple="multiple">
+    <q-dialog v-model="confirm" persistent>
+      <q-card style="font-size: 1rem;">
+        <q-card-section class="row items-center">
+          <q-avatar icon="folder" />
+        </q-card-section>
+   <q-card-section class="row items-center">
+          <span v-for="(file) of files" :key="file.id" class="file-item draggable-item">
+          <p class="file-name">文件名:{{file.name}}</p>
+          <!-- <span class="file-remove" @click="remove(index)">+</span> -->
+           <span class="q-ml-sm">确定上传吗?</span>
+          </span>
+   </q-card-section>
+        <q-card-actions align="right" >
+          <q-btn flat label="取消" color="primary" v-close-popup @click="cancel()" style="font-size: 1rem;"/>
+          <q-btn flat label="确定" color="primary" v-close-popup @click="Uploading()" style="font-size: 1rem;"/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 <script>
-  // import { Upload } from '@/api/affairs/Circle'
   import { Upload } from '@/api/teacher/Effort'
   export default {
-    name: 'UploaderImg',
-    props: {
-      src: {
-        type: String,
-        required: true
-      }
-    },
+    name: 'UploaderXls',
     data() {
       return {
+        confirm:false,
         status: 'ready',
         files: [],
+        fileData:[],
         uploading: false,
         percent: 0,
         num:10,
@@ -54,7 +45,7 @@
           console.warn('no file!');
           return
         }
-  //限制最多上传十张
+        //限制最多上传十张
        if (this.files.length >this.num) {
          this.$message.warning('最多只能上传10张！')
          return
@@ -66,25 +57,23 @@
         this.files.forEach((item) => {
           formData.append(item.name, item.file)
         })
-        this.Uploader(formData)
+        this.fileData = formData
+        this.confirm = true
+      },
+      Uploading(){
+        this.$emit('upload',{ data:this.fileData, files:this.files })
+        this.finished()
         return false
       },
-
-    Uploader(data){
-       console.log('formData!',data)
-      Upload(data).then(res => {
-          this.files = []
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-
       finished() {
         this.files = []
         this.status = 'ready'
       },
       remove(index) {
         this.files.splice(index, 1) //从哪个位置删除1个元素
+      },
+      cancel(){
+        this.files = []
       },
       fileChanged() {
         console.log("fileChanged")
@@ -96,33 +85,15 @@
               size: list[i].size,
               file: list[i]
             }
-            this.html5Reader(list[i], item)
             this.files.push(item)
           }
         }
         this.$refs.file.value = ''
-        this.submit(1045)
-      },
-      // 将图片文件转成BASE64格式
-      html5Reader(file, item) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.$set(item, 'src', e.target.result)
-        }
-        reader.readAsDataURL(file)
+        this.submit()
       },
       isContain(file) {
         return this.files.find((item) => item.name === file.name && item.size === file.size)
       },
-      uploadProgress(evt) {
-        const component = this
-        if (evt.lengthComputable) {
-          const percentComplete = Math.round((evt.loaded * 100) / evt.total)
-          component.percent = percentComplete / 100
-        } else {
-          console.warn('upload progress unable to compute')
-        }
-      }
     }
   }
 </script>
