@@ -12,7 +12,7 @@
         <q-btn-group outline>
           <q-btn outline color="primary" label="上传成绩" icon="call_made" :disable="loading" @click="redayUpload()"/>
           <q-btn outline color="primary" label="下载模板" icon="arrow_downward" :disable="loading" @click="download()"/>
-          <q-btn outline color="primary" label="删除" icon="priority_high"/>
+          <q-btn outline color="primary" label="删除" icon="priority_high"  @click="deleted()"/>
         </q-btn-group>
       </q-card-section>
     </q-card-section>
@@ -31,12 +31,25 @@
     </div>
     <div class="space" style="height:20px;"></div>
 
-    <div class="q-gutter-sm" style="font-size: 1.2rem;">
-    <span style="font-size: 0.7rem;color: rgba(0,0,0,0.54); margin-left: 1rem;">科目列表</span>
+    <div class="q-gutter-sm" style="font-size: 1rem;">
+    <span style="font-size: 1rem;color: rgba(0,0,0,0.54); margin-left: 1rem;">科目列表</span>
     <q-separator /> 
     <q-checkbox v-for="(item,index) in form.subject" :key="index"  v-model="item.check" :label="item.title"  />
     </div>
 </template>
+  <div class="q-pa-md" style="max-width: 450px;font-size: 1rem; margin-left: -0.5rem;">
+    <q-list v-for="(item,index) in exam_results" :key="index" >
+      <q-item v-for="(res,k) in strToJson(item.results)" :key="k" style="min-height: 20px;">
+        <q-item-section>
+          <q-item-label >{{k}}</q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-item-label >{{res}}</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-separator spaced inset />
+    </q-list>
+  </div>
         </q-scroll-area>
         </q-card>
       </div>
@@ -49,7 +62,7 @@ import Vue from 'vue'
 import BaseContent from '@/components/BaseContent/BaseContent'
 import { thumbStyleOfMenu } from '@/components/BaseContent/ThumbStyle'
 import UploaderXls from '@/components/Uploader/UploaderXls'
-import { List, Add, Upload } from '@/api/teacher/Effort'
+import { Single, Add, Upload, Deleted} from '@/api/teacher/Effort'
 export default {
   components: { BaseContent, UploaderXls },
   data () {
@@ -58,6 +71,11 @@ export default {
       form:{
         title:'',
         subject:[]
+      },
+      exam_results:{
+        student:{
+          name:''
+        }
       },
       query:{
         id:''
@@ -75,9 +93,10 @@ export default {
   },
   methods:{
     fetch() {
-      List({query:this.query}).then(res => {
+      Single({query:this.query}).then(res => {
         if (res.data.code == 200) {
-          this.form =  res.data.response[0]
+          this.form = res.data.response
+          this.exam_results = res.data.response.exam_results
         }
       }).catch(error => {
         console.log(error)
@@ -86,10 +105,13 @@ export default {
     redayUpload() {
       this.$refs.child.add()
     },
-    upload(data){
-      Upload(data.data).then(res => {
-        
-
+    upload(formData){
+      formData.append('pid', this.query.id)
+      Upload(formData).then(res => {
+        if (res.data.code == 200) {
+          this.Notify('操作成功','green')
+          this.fetch()
+        }
       }).catch(error => {
         console.log(error)
       })
@@ -126,6 +148,20 @@ export default {
         console.log(error)
       })
     }, 
+    deleted(){
+      Deleted({id:this.query.id}).then(res => {
+        if (res.data.code == 200) {
+          this.Notify('操作成功','green')
+          this.$router.go(-1);
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    strToJson(str){ 
+      let js = JSON.parse(str) 
+      return js
+    }
   }
 }
 </script>

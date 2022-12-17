@@ -29,7 +29,7 @@ module.exports = {
   ],
 
   // 指定项目打包的目标文件夹
-  outputDir: '/var/www/html/quamob/mob',
+  outputDir: '/var/www/html/oldschool-qua/mob',
 
   // 静态资源文件夹 *注：当生成的资源覆写 filename 或 chunkFilename 时，assetsDir 会被忽略。
   // assetsDir: 'static',

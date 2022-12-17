@@ -19,6 +19,14 @@ export function List (params) {
     params
   })
 }
+export function Single (params) {
+  return _axios({
+    url: Prefix+'/single',
+    method: 'get',
+    responseType: 'text',
+    params
+  })
+}
 
 export function Add (data) {
   return _axios({
@@ -37,3 +45,12 @@ export function Upload (data) {
     data
   })
 }
+export function Deleted (data) {
+  return _axios({
+    url: Prefix+'/deleted',
+    method: 'post',
+    responseType: 'text',
+    data
+  })
+}
+
