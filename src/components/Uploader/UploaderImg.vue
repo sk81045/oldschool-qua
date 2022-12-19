@@ -48,7 +48,7 @@
       add() {
         this.$refs.file.click() //调用file的click事件  用ref绑定之后，不需要在获取dom节点了，直接使用$refs调用就行。
       },
-      submit(pid) {
+      submit(pid,type='Circle') {
         if (this.files.length === 0) {
           console.warn('no file!');
           return
@@ -62,6 +62,7 @@
         //当点击上传按钮时，将会遍历所有选中的文件，并添加到自定义的FormData中
         const formData = new FormData()
         formData.append('pid', pid)
+        formData.append('type', type)
         this.files.forEach((item) => {
           formData.append(item.name, item.file)
         })

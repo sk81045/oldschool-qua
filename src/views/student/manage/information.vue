@@ -87,10 +87,11 @@
         <q-item-section>{{ strTo(info.classs.teacher) }}</q-item-section>
       </q-item>
     <q-separator />  
-      <q-item clickable v-ripple class="text-h6"  v-show="info.parents.length">
-        <q-item-section avatar v-for="(item) in info.parents" v-bind:key="item.id" >
-        <q-item-section>家长信息   {{item.phone}}</q-item-section>
+      <q-item clickable v-ripple class="text-h6"  v-for="(item,index) in info.parents" v-bind:key="item.id">
+        <q-item-section avatar>
+        <q-item-section>家长{{index+1}}</q-item-section>
         </q-item-section>
+        <q-item-section>{{item.phone}}</q-item-section>
       </q-item>
     <q-separator />  
     </q-list>

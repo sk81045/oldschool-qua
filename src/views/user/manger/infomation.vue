@@ -68,7 +68,7 @@
         <q-item-section avatar>
         <q-item-section>年级</q-item-section>
         </q-item-section>
-        <q-item-section>{{parents.classs.grades.grade}}</q-item-section>
+        <!-- <q-item-section>{{parents.classs.grades.grade}}</q-item-section> -->
       </q-item>
       <q-separator />   
       <q-item clickable v-ripple class="text-h6">
@@ -110,6 +110,7 @@
       };
     },
     created(){
+      console.log("ddsda")
       let users = JSON.parse(sessionStorage.getItem('user_role'))
       if(users.identidyer == '教师'){
         this.identidyer = '教师'

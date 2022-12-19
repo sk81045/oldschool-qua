@@ -65,6 +65,9 @@ return Vue.prototype.$rootURL = process.env.NODE_ENV === 'production' ? '/' : 'h
 Vue.prototype.rootApi = function (){
 return Vue.prototype.$baseURL = process.env.NODE_ENV === 'production' ? '/api/' : 'http://kick.yoozhi.cn/api/'
 }
+Vue.prototype.getImgUrl = function (img){
+return Vue.prototype.$rootURL + img  
+}
 
 const vue = new Vue({
   router,

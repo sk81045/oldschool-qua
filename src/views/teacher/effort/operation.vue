@@ -63,6 +63,7 @@ import BaseContent from '@/components/BaseContent/BaseContent'
 import { thumbStyleOfMenu } from '@/components/BaseContent/ThumbStyle'
 import UploaderXls from '@/components/Uploader/UploaderXls'
 import { Single, Add, Upload, Deleted} from '@/api/teacher/Effort'
+const users = JSON.parse(sessionStorage.getItem('user_role'))
 export default {
   components: { BaseContent, UploaderXls },
   data () {
@@ -85,8 +86,7 @@ export default {
     }
   },
   created(){
-    let users = JSON.parse(sessionStorage.getItem('user_role'))
-    console.log('users',users.identity.classs.id)
+    console.log('users',users)
     this.class = users.identity.classs.id
     this.query.id = this.$route.query.id
     this.fetch()
@@ -117,7 +117,7 @@ export default {
       })
     },
     download() {
-      window.location.href = this.rootApi()+"outside/effort/export?class="+this.class+'&name='+this.form.title
+      window.location.href = this.rootApi()+"outside/effort/export?sid="+users.sid+"&class="+this.class+'&name='+this.form.title
     },
     add() {
       this.form.subject = []
