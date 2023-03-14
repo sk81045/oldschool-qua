@@ -1,9 +1,9 @@
 
 <template>
   <div class="q-pa-md">
-      <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
+<!--       <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
         <img src="@/assets/img/infomation.svg" style="width:100%" />
-      </div>
+      </div> -->
     <div class="row items-start q-gutter-md">
       <q-card flat bordered class="col" style="
       border: 0.00rem solid #355B75;
@@ -33,7 +33,8 @@
         <q-item-section avatar>
         <q-item-section>部门</q-item-section>
         </q-item-section>
-        <q-item-section>{{teachers.dept.department}}</q-item-section>
+        <q-item-section v-if="teachers.dept" >{{ teachers.dept.department }}</q-item-section> 
+        <q-item-section v-else >暂无</q-item-section> 
       </q-item>
       <q-separator />   
       <q-separator />
@@ -75,7 +76,9 @@
         <q-item-section avatar>
         <q-item-section>班级</q-item-section>
         </q-item-section>
-        <q-item-section>{{parents.classs.class}}</q-item-section>
+        <q-item-section v-if="parents.classs" >{{parents.classs.class}}</q-item-section>
+        <q-item-section v-else >暂无</q-item-section>
+
       </q-item>
 
       <q-separator />
@@ -110,11 +113,11 @@
       };
     },
     created(){
-      console.log("ddsda")
       let users = JSON.parse(sessionStorage.getItem('user_role'))
       if(users.identidyer == '教师'){
         this.identidyer = '教师'
         this.teachers = users.identity
+        console.log('this.teachers',this.teachers.dept)
         this.teacherVierw = true
       }
       if(users.identidyer == '学生家长'){

@@ -1,6 +1,5 @@
 <template>
   <base-content>
-    {{msg}}
   </base-content>
 </template>
 

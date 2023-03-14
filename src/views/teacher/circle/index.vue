@@ -5,13 +5,13 @@
 <!--         <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
           <img :src="require('@/assets/img/tree.svg')" style="width:100%" />
         </div> -->
-        <q-card class="my-card" style="
+        <div class="con" style="
     width: 100%;
     height:700px; 
 /*    margin-top: -19rem;*/
-    color: #355B75;
-    border-radius: 10px;
-    box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
+    /*color: #355B75;*/
+    /*border-radius: 10px;*/
+    /*box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
           <q-scroll-area ref="scrollArea" style="height: calc(95vh - 124px);" :thumb-style="thumbStyleOfMenu">
             <q-card-section>
               <q-btn-group outline>
@@ -54,7 +54,7 @@
               <!-- <div class="space" style="height:10px;"></div> -->
             </div>
           </q-scroll-area>
-        </q-card>
+        </div>
       </div>
     </div>
     <q-dialog v-model="imgview">
