@@ -1,243 +1,178 @@
 <template>
-  <div class="vue-uploader">
-    <div class="file-list">
-      <section v-for="(file, index) of files" :key="file.id" class="file-item draggable-item">
-        <!-- <img :src="file.src" alt="" ondragstart="return false;"> -->
-        <!-- <p class="file-name">{{file.name}}</p> -->
-        <span class="file-remove" @click="remove(index)">+</span>
-      </section>
-      <section v-if="status == 'ready'" class="file-item">
-        <div  class="add">
-         <button  @click="add">选择</button>
-        </div>
-      </section>
+  <base-content>
+ <div class="q-pa-md" loading>
+    <div class="row">
+    <q-card class="cta-popular" style=" height: 12rem;" >
+      <q-card-section>
+        <div class="text-h5" style="line-height: 15px;">{{user.school.wxname}}-{{user.student.name}}</div>
+      </q-card-section>
+      <q-separator inset style="height: 2px;
+    background: #355B75;"/>
+      <q-card-section>
+          <img src="@/assets/img/芯片.png"/>
+      </q-card-section>
+      <q-card-section style="margin-top: -0.9rem;">
+      <div class="text-h4" style="margin-left: 5.1rem;"><span style="font-size: 1rem;">学号 </span>{{user.student.studentid}}</div>
+      </q-card-section>
+      <q-card-section style="margin-top: -0.9rem; height: 0px;
+    margin-left: 10.5rem;">
+      <div class="text-h6"><span style="font-size: 1rem;">当前余额 </span>¥ {{ removeZero(balance)}} </div>
+      </q-card-section>
+<!--       <q-card-section style="margin-top: 0.9rem;
+        margin-top: -2.1rem;
+        margin-right: 13.1rem;">
+        <q-btn unelevated label="充值"  style="background: #355B75; color: #FFF;" v-show="false"/>
+      </q-card-section> -->
+    </q-card>
+
+    <q-card class="my-card" style="
+    width: 100%; 
+    color: #355B75;
+    height: 0px;
+    ">
+      <q-card-section>
+      <div class="q-gutter-sm" style="
+      margin-top: -15px;
+      float: right;">
+      <q-checkbox keep-color size="xs" v-model="query.spend" label="消费" color="cyan" @input="fetch()"/>
+      <q-checkbox keep-color size="xs" v-model="query.recharge" label="充值或减款" color="cyan"  @input="fetch()"/>
     </div>
-
-    <section v-if="files.length != 0" class="upload-func">
-      <div class="progress-bar">
-        <section v-if="uploading" :width="(percent * 100) + '%'">{{(percent * 100) + '%'}}</section>
-      </div>
-      <div class="operation-box">
-        <button v-if="status == 'ready'" @click="submit">上传</button>
-        <button v-if="status == 'finished'" @click="finished">完成</button>
-      </div>
-    </section>
-    <input type="file" accept="xls/*" @change="fileChanged" ref="file" multiple="multiple">
+<div class="q-pa-md" style="margin-top: -15px;" @click="hiddenDay=true">
+     <q-item-label class="text-h7" style="margin-left: -1rem;color: #00bcd4" ><u>{{ query.date }} 消费记录</u></q-item-label>
   </div>
+    </q-card-section>
+    <q-separator inset style="margin-top: -1.5rem;height: 1px; background: #355B75;"/>
+    <q-scroll-area ref="scrollArea" style="height: calc(95vh - 124px);" :thumb-style="thumbStyleOfMenu">
+    <div style="max-width: 90%;" v-for="(item,index) in list" :key="index">
+        <q-item clickable v-ripple style="
+        margin-left: 0.3rem;
+        ">
+          <q-item-section style="
+            margin-left: 2rem;
+            ">
+            <q-item-label class="text-h6">{{item.MacType}}</q-item-label>
+            <q-item-label caption lines="1" style="color: #355B75;">余额 ¥{{ removeZero(item.AfterPay)}} </q-item-label>
+            <q-item-label caption lines="1">{{item.PayTime}}</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+        <q-item-label class="text-h6" style="color: #0C7967;" v-if="item.MacType=='增款'">+¥ {{ removeZero(item.PayMoney) }}</q-item-label>
+        <q-item-label class="text-h6" style="color: #355B75;" v-else>-¥ {{ removeZero(item.PayMoney) }}</q-item-label>
+          </q-item-section>
+        </q-item>
+    </div>
+  <div class="low">
+    <div class="space" style="height:50px;"></div>
+    <img src="@/assets/img/nodata.svg" style="width: 50%;margin-left: 6rem;" v-show="nodata"/>
+    <img src="@/assets/img/nomore.svg" style="width:100%" />
+  </div>
+  <div class="space" style="height:90px;"></div>
+  </q-scroll-area>
+    </q-card>
+</div>
+</div>
+      <q-dialog v-model="hiddenDay">
+        <q-date v-model="days" mask="YYYY-MM-DD" range>
+          <div class="row items-center justify-end q-gutter-sm">
+            <q-btn label="确定" color="primary" flat @click="chooseDate" v-close-popup />
+          </div>
+        </q-date>
+      </q-dialog>
+  </base-content>
 </template>
+
 <script>
-  // import { Upload } from '@/api/affairs/Circle'
-  import { Upload } from '@/api/teacher/Effort'
-  export default {
-    name: 'UploaderImg',
-    props: {
-      src: {
-        type: String,
-        required: true
-      }
-    },
-    data() {
-      return {
-        status: 'ready',
-        files: [],
-        uploading: false,
-        percent: 0,
-        num:10,
-      }
-    },
-    methods: {
-      add() {
-        this.$refs.file.click() //调用file的click事件  用ref绑定之后，不需要在获取dom节点了，直接使用$refs调用就行。
+import BaseContent from '@/components/BaseContent/BaseContent'
+import { thumbStyleOfMenu } from '@/components/BaseContent/ThumbStyle'
+import { record } from '@/api/student/Sellfood'
+export default {
+  components: { BaseContent },
+  data () {
+    return {
+      thumbStyleOfMenu,
+      query:{
+        spend:true,
+        recharge:true,
+        date:'',
       },
-      submit(pid) {
-        if (this.files.length === 0) {
-          console.warn('no file!');
-          return
+      balance:'0.0000',
+      user:{
+        school:{},
+        student:{},
+      },
+      days: { from: '2022-10-01', to: '2022-10-05' },
+      list:[],
+      nodata:true,
+      loading:false,
+      hiddenDay:false
+    }
+  },
+  created(){
+    let currentDay = new Date();
+    let yesterDay = new Date();
+    yesterDay.setDate(currentDay.getDate() - 5);
+    this.dateValue  =[yesterDay.toJSON().slice(0,10),currentDay.toJSON().slice(0,10)];
+
+    console.log("var days = new Date().getDate()；",this.dateValue)
+    this.days.from = this.dateValue[0]
+    this.days.to = this.dateValue[1]
+
+    this.query.date =  this.days.from +"至"+this.days.to,
+    this.fetch()
+  },
+  methods:{
+    fetch() {
+      this.showLoading()
+      record({query:this.query}).then(res => {
+        this.user = res.data.user
+         this.list = res.data.result
+        if(res.data.result.length == 0){
+          this.nodata = true
+        }else{
+          this.nodata = false
+          this.balance = res.data.balance
         }
-  //限制最多上传十张
-       if (this.files.length >this.num) {
-         this.$message.warning('最多只能上传10张！')
-         return
-       }
-
-        //当点击上传按钮时，将会遍历所有选中的文件，并添加到自定义的FormData中
-        const formData = new FormData()
-        formData.append('pid', pid)
-        this.files.forEach((item) => {
-          formData.append(item.name, item.file)
-        })
-        this.Uploader(formData)
-        return false
-      },
-
-    Uploader(data){
-       console.log('formData!',data)
-      Upload(data).then(res => {
-          this.files = []
       }).catch(error => {
         console.log(error)
       })
+    }, 
+    chooseDate(){
+      this.query.date = this.days.from +"至"+this.days.to
+      this.fetch()
+      console.log("this.days",this.days)
     },
-
-      finished() {
-        this.files = []
-        this.status = 'ready'
-      },
-      remove(index) {
-        this.files.splice(index, 1) //从哪个位置删除1个元素
-      },
-      fileChanged() {
-        console.log("fileChanged")
-        const list = this.$refs.file.files
-        for (let i = 0; i < list.length; i++) {
-          if (!this.isContain(list[i])) {
-            const item = {
-              name: list[i].name,
-              size: list[i].size,
-              file: list[i]
-            }
-            this.html5Reader(list[i], item)
-            this.files.push(item)
-          }
-        }
-        this.$refs.file.value = ''
-        this.submit(1045)
-      },
-      // 将图片文件转成BASE64格式
-      html5Reader(file, item) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.$set(item, 'src', e.target.result)
-        }
-        reader.readAsDataURL(file)
-      },
-      isContain(file) {
-        return this.files.find((item) => item.name === file.name && item.size === file.size)
-      },
-      uploadProgress(evt) {
-        const component = this
-        if (evt.lengthComputable) {
-          const percentComplete = Math.round((evt.loaded * 100) / evt.total)
-          component.percent = percentComplete / 100
-        } else {
-          console.warn('upload progress unable to compute')
-        }
-      }
-    }
+    removeZero(str) {
+      str = str.substring(0, str.length - 2);
+      return  str
+    },
   }
+}
 </script>
-<style>
-  .vue-uploader {
-    /*border: 1px solid #e5e5e5;*/
-  }
-
-  .vue-uploader .file-list {
-    padding: 10px 0px;
-  }
-
-  .vue-uploader .file-list:after {
-    content: '';
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
-    font-size: 0;
-  }
-
-  .vue-uploader .file-list .file-item {
-    float: left;
-    position: relative;
-    width: 100px;
+<style type="text/css">
+  .cta-popular {
+    width:100%;
+    /*margin-left: 0.6rem;*/
+    /*margin: 0.2rem 3px 3px 0.35rem;*/
+    border-radius: 30px;
     text-align: center;
-  }
-
-  .vue-uploader .file-list .file-item img {
-    width: 80px;
-    height: 80px;
-    border: 1px solid #ececec;
-  }
-
-  .vue-uploader .file-list .file-item .file-remove {
-    position: absolute;
-    right: 12px;
-    display: none;
-    top: 4px;
-    width: 14px;
-    height: 14px;
-    color: white;
-    cursor: pointer;
-    line-height: 12px;
-    border-radius: 100%;
-    transform: rotate(45deg);
-    background: rgba(0, 0, 0, 0.5);
-  }
-
-  .vue-uploader .file-list .file-item:hover .file-remove {
-    display: inline;
-  }
-
-  .vue-uploader .file-list .file-item .file-name {
-    margin: 0;
-    height: 40px;
-    word-break: break-all;
-    font-size: 14px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-/*
-  .vue-uploader .add {
-    width: 80px;
-    height: 80px;
-    margin-left: 10px;
-    float: left;
-    text-align: center;
-    line-height: 80px;
-    border: 1px dashed #ececec;
-    font-size: 30px;
-    cursor: pointer;
-  }*/
-
-  .vue-uploader .upload-func {
-    display: flex;
-    padding: 10px;
-    margin: 0px;
-    background: #f8f8f8;
-    border-top: 1px solid #ececec;
-  }
-
-  .vue-uploader .upload-func .progress-bar {
-    flex-grow: 1;
-  }
-
-  .vue-uploader .upload-func .progress-bar section {
-    margin-top: 5px;
-    background: #00b4aa;
-    border-radius: 3px;
-    text-align: center;
-    color: #fff;
-    font-size: 12px;
-    transition: all .5s ease;
-  }
-
-  .vue-uploader .upload-func .operation-box {
-    flex-grow: 0;
-    padding-left: 10px;
-  }
-
-  .vue-uploader .upload-func .operation-box button {
-    padding: 4px 12px;
-    color: #fff;
-    background: #007ACC;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-  }
-
-  .vue-uploader>input[type="file"] {
-    display: none;
-  }
+    /*font-size: 1.5rem;*/
+    font-weight: 400;
+    line-height: 3rem;
+    background: linear-gradient(315deg, #81d4fa 0%, #00e5ff 110%);
+    /*box-shadow: 0px 1px 0.1rem 0.1rem #355B75;*/
+    border: 0.2rem solid #355B75;
+    /*border: 0.05rem solid #838487;*/
+    color: #355B75;
+}
+.cta-popular img{
+  width: 12%;
+  position: absolute;
+  margin-left: -8rem;
+  margin-top: 0.5rem;
+}
+.cta-popular p{
+  position: absolute;
+  margin-left: 4rem;
+  margin-top: -1rem;
+  font-size: 0.5rem;
+}
 </style>

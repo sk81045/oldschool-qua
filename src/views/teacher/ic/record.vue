@@ -1,75 +1,65 @@
 <template>
   <base-content>
- <div class="q-pa-md" loading>
-    <div class="row">
-    <q-card class="cta-popular" style=" height: 12rem;" >
-      <q-card-section>
-        <div class="text-h5" style="line-height: 15px;">{{user.school.wxname}}-{{user.name}}</div>
-      </q-card-section>
-      <q-separator inset style="height: 2px;
-    background: #355B75;"/>
-      <q-card-section>
-          <img src="@/assets/img/芯片.png"/>
-      </q-card-section>
-      <q-card-section style="margin-top: -0.9rem;">
-      <div class="text-h4" style="margin-left: 5.1rem;"><span style="font-size: 1rem;">学号 </span>{{user.teacherid}}</div>
-      </q-card-section>
-      <q-card-section style="margin-top: -0.9rem; height: 0px;
-    margin-left: 10.5rem;">
-      <div class="text-h6"><span style="font-size: 1rem;">当前余额 </span>¥ {{ removeZero(balance)}} </div>
-      </q-card-section>
-<!--       <q-card-section style="margin-top: 0.9rem;
-        margin-top: -2.1rem;
-        margin-right: 13.1rem;">
-        <q-btn unelevated label="充值"  style="background: #355B75; color: #FFF;" v-show="false"/>
-      </q-card-section> -->
-    </q-card>
-
-    <q-card class="my-card" style="
-    width: 100%; 
+    <div class="q-pa-md">
+      <div class="row">
+        <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-6">
+          <img :src="require('@/assets/img/atta.png')" style="width:105%" />
+        </div>
+     <q-card class="my-card" style="
+    width: 100%;
+    height:0px; 
+    text-align: center; 
+    margin-top: -15rem;
+    color: rgb(3 36 46 / 54%);
+    border-radius: 10px;
+    box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
+        <q-item-section>
+          <q-item-label>欢迎,来自{{user.school.wxname}}的{{user.name}}老师</q-item-label>
+          <q-item-label>您的ic卡号是 {{user.teacherid}}</q-item-label>
+          <q-item-label style="
+          margin-top: 1.5rem;
+          font-size: 2rem;
+          color: #355B75;"><a style="font-size: 1.3rem;">余额 </a> ¥{{ removeZero(balance)}}</q-item-label>
+          <q-item-label style="color: #006d21;">(今日已消费 ¥{{todaypay}} 元)</q-item-label>
+        </q-item-section>
+        <q-btn push color="white" text-color="primary" label="筛选消费记录" style="margin-top: 1rem;" @click="hiddenDay=true"/>
+    </q-card>     
+  <q-card class="my-card" style="
+    width: 100%;
+    height:0px; 
+    /*margin-top: -10rem;*/
     color: #355B75;
-    height: 0px;
-    ">
-      <q-card-section>
-      <div class="q-gutter-sm" style="
-      margin-top: -15px;
-      float: right;">
-      <q-checkbox keep-color size="xs" v-model="query.spend" label="消费" color="cyan" @input="fetch()"/>
-      <q-checkbox keep-color size="xs" v-model="query.recharge" label="充值或减款" color="cyan"  @input="fetch()"/>
-    </div>
-<div class="q-pa-md" style="margin-top: -15px;" @click="hiddenDay=true">
-     <q-item-label class="text-h7" style="margin-left: -1rem;color: #00bcd4" ><u>{{ query.date }} 消费记录</u></q-item-label>
-  </div>
-    </q-card-section>
-    <q-separator inset style="margin-top: -1.5rem;height: 1px; background: #355B75;"/>
-    <q-scroll-area ref="scrollArea" style="height: calc(95vh - 124px);" :thumb-style="thumbStyleOfMenu">
-    <div style="max-width: 90%;" v-for="(item,index) in list" :key="index">
-        <q-item clickable v-ripple style="
-        margin-left: 0.3rem;
-        ">
-          <q-item-section style="
-            margin-left: 2rem;
-            ">
-            <q-item-label class="text-h6">{{item.MacType}}</q-item-label>
-            <q-item-label caption lines="1" style="color: #355B75;">余额 ¥{{ removeZero(item.AfterPay)}} </q-item-label>
-            <q-item-label caption lines="1">{{item.PayTime}}</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-        <q-item-label class="text-h6" style="color: #0C7967;" v-if="item.MacType=='增款'">+¥ {{ removeZero(item.PayMoney) }}</q-item-label>
-        <q-item-label class="text-h6" style="color: #355B75;" v-else>-¥ {{ removeZero(item.PayMoney) }}</q-item-label>
-          </q-item-section>
-        </q-item>
-    </div>
+    border-radius: 10px;
+    box-shadow: 0px 0px 2rem 0rem #c0c6cf;">
+  <q-scroll-area ref="scrollArea" style="height: calc(95vh - 124px);" :thumb-style="thumbStyleOfMenu">
+    <q-list v-for="(item,index) in list" :key="index">
+      <q-item style="color: #355B75;">
+        <q-item-section>
+          <q-item-label class="text-h6">{{item.MacType}}</q-item-label>
+          <q-item-label  style="font-size: 0.8rem;">{{item.PayTime}}</q-item-label>
+          <q-item-label  style="font-size: 0.8rem;">余额 ¥{{ removeZero(item.AfterPay)}}</q-item-label>
+        </q-item-section>
+        <q-item-section side top v-if="item.MacType=='增款'"  style="color: #0C7967;">
+          <q-icon name="local_atm" />
+          <q-item-label class="text-h6">+¥{{ removeZero(item.PayMoney) }}</q-item-label>
+        </q-item-section>
+        <q-item-section side top  v-else>
+          <q-icon name="restaurant_menu" />
+          <q-item-label class="text-h6">-¥{{ removeZero(item.PayMoney) }}</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-separator spaced inset />
+    </q-list>
   <div class="low">
-    <div class="space" style="height:50px;"></div>
+    <div class="space" style="height:10px;"></div>
     <img src="@/assets/img/nodata.svg" style="width: 50%;margin-left: 6rem;" v-show="nodata"/>
     <!-- <img src="@/assets/img/nomore.svg" style="width:100%" /> -->
   </div>
-  <div class="space" style="height:90px;"></div>
-  </q-scroll-area>
-    </q-card>
-</div>
-</div>
+  <div class="space" style="height:10px;"></div>
+          </q-scroll-area>
+        </q-card>
+      </div>
+    </div>
       <q-dialog v-model="hiddenDay">
         <q-date v-model="days" mask="YYYY-MM-DD" range>
           <div class="row items-center justify-end q-gutter-sm">
@@ -79,8 +69,8 @@
       </q-dialog>
   </base-content>
 </template>
-
 <script>
+import Vue from 'vue'  
 import BaseContent from '@/components/BaseContent/BaseContent'
 import { thumbStyleOfMenu } from '@/components/BaseContent/ThumbStyle'
 import { record } from '@/api/teacher/ic/record'
@@ -94,16 +84,16 @@ export default {
         recharge:true,
         date:'',
       },
-      balance:'0.0000',
       user:{
         school:{},
         student:{},
       },
+      balance:'0.0000',
+      todaypay:'0.0000',
       days: { from: '2022-10-01', to: '2022-10-05' },
       list:[],
+      hiddenDay:false,
       nodata:true,
-      loading:false,
-      hiddenDay:false
     }
   },
   created(){
@@ -113,7 +103,6 @@ export default {
     this.dateValue  =[yesterDay.toJSON().slice(0,10),currentDay.toJSON().slice(0,10)];
     this.days.from = this.dateValue[0]
     this.days.to = this.dateValue[1]
-
     this.query.date =  this.days.from +"至"+this.days.to,
     this.fetch()
   },
@@ -128,6 +117,7 @@ export default {
         }else{
           this.nodata = false
           this.balance = res.data.balance
+          this.todaypay = res.data.todaypay
         }
       }).catch(error => {
         console.log(error)
@@ -145,32 +135,3 @@ export default {
   }
 }
 </script>
-<style type="text/css">
-  .cta-popular {
-    width:100%;
-    /*margin-left: 0.6rem;*/
-    /*margin: 0.2rem 3px 3px 0.35rem;*/
-    border-radius: 30px;
-    text-align: center;
-    /*font-size: 1.5rem;*/
-    font-weight: 400;
-    line-height: 3rem;
-    background: linear-gradient(315deg, #f3aca7 0%, #ffffff 110%);
-    /*box-shadow: 0px 1px 0.1rem 0.1rem #355B75;*/
-    border: 0.2rem solid #355B75;
-    /*border: 0.05rem solid #838487;*/
-    color: #355B75;
-}
-.cta-popular img{
-  width: 12%;
-  position: absolute;
-  margin-left: -8rem;
-  margin-top: 0.5rem;
-}
-.cta-popular p{
-  position: absolute;
-  margin-left: 4rem;
-  margin-top: -1rem;
-  font-size: 0.5rem;
-}
-</style>
